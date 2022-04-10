@@ -7,24 +7,29 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-import { initData,getSort} from './alghorithms/helpers';
+import { initData, getSort } from './alghorithms/helpers';
 const App = () => {
+
+  // 0 - when app is in init
+  // 1 - when app is running
+  // 2 - when app is pause but running
+  // 3 - when app is restarting
 
   const [data, setData] = useState([]);
   const increment = useRef(null);
-  const [time, setTime] = useState(0);
   const [current, setCurrent] = useState(0)
   const [size, setSize] = useState(9);
   const [sortOptions] = useState(['Bubble Sort', 'Selection Sort', 'Shell Sort', 'Insertion Sort', 'Quick Sort'])
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState('Bubble Sort');
   const [speed, setSpeed] = useState(1000);
-  const [isPause, setIsPause] = useState(false);
+  const [state, setState] = useState(0);
+  const [restart, setRestart] = useState(false);
+
 
   const [timer, setTimer] = useState(0)
 
   const handleStart = () => {
 
-    if (isPause) return;
 
     if (sort === '') {
       alert("Please Select Sort");
@@ -41,7 +46,8 @@ const App = () => {
       return;
     }
 
-    setIsPause(true);
+    setState(1);
+
     const move = setInterval(() => {
       setTimer((timer) => timer + 1);
       setCurrent((current) => data.length - 1 === current ? current : current + 1);
@@ -52,51 +58,71 @@ const App = () => {
 
   const handleReset = () => {
     clearInterval(increment.current);
+    setState(2);
   }
-
-  useEffect(() => {
-    if (data.length - 1 <= current) {
-      handleReset()
-    }
-  }, [current, timer])
-
 
   const handleSizeChange = (size) => {
+    setCurrent(0);
     setSize(size);
-
     setData([]);
-    setTime([]);
-  }
+    setTimer(0);
+  } 
 
   const handlerSortChange = (sort) => {
+    setData([]);
     setSort(sort);
+    setCurrent(0);
   }
 
   const handleSpeed = (speed) => {
     setSpeed(speed);
   }
 
-  const handleInnit = () => {
+  useEffect(() => {
+    if (sort === '') return;
+    setTimer(0);
 
-    const tempData = JSON.parse(JSON.stringify(data));
+    const newData = getSort(sort, size, data);
 
-    for (let i = tempData.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [tempData[i], tempData[j]] = [tempData[j], tempData[i]];
+    setData(newData);
+  }, [size, sort])
+
+  useEffect(() => {
+    if (state === 3) {
+      clearInterval(increment.current);
+      setRestart(true);
+      setState(0);
+      setTimer(0);
     }
-    setData(tempData);
+  }, [state])
+
+
+  const handleRestart = () => {
+    setCurrent(0);
+    setData([]);
+    setState(3)
+    setRestart(true);
   }
 
   useEffect(() => {
-    if(sort === '') return;
+    if(restart === true){
+      setTimer(0);
+      const newData = getSort(sort, size, data);
+      setData(newData);
+    }
 
-    const newData = getSort(sort,size,data);
+  }, [restart])
 
-    console.log(newData);
+  useEffect(() => {
+    if (data.length - 1 <= current && state ===1) {
+      alert('already sorted');
+      clearInterval(increment.current);
+      setState(0);
+    }
+    
+  }, [current])
 
 
-    setData(newData);
-  }, [size,sort])
 
 
 
@@ -109,12 +135,12 @@ const App = () => {
           <TextField size="small" style={{ marginRight: 10 }} onChange={(e) => handleSizeChange(e.target.value)} type='number' id="outlined-basic" label="Size" value={size} variant="outlined" />
 
           <FormControl sx={{ minWidth: 120 }} size="small">
-            <InputLabel id="demo-select-small">Sort Type</InputLabel>
+            <InputLabel id="demo-select-small" >Sort Type</InputLabel>
             <Select
               labelId="demo-select-small"
               id="demo-select-small"
               value={sort}
-              label="Sort"
+              label="Sort Type"
               onChange={(e) => handlerSortChange(e.target.value)}
             >
 
@@ -129,13 +155,27 @@ const App = () => {
         </div>
 
         <div className="buttons" >
-          <Button variant="outlined" onClick={handleStart} style={{ marginRight: 10 }}>SORT</Button>
+
           {
-            isPause ? <Button variant="outlined" onClick={handleReset}>
-              Pause
-            </Button> : <Button variant="outlined" onClick={handleInnit}>
-              Shuffle
-            </Button>
+            state === 0 ? <Button variant="outlined" onClick={handleStart} style={{ marginRight: 10 }}>SORT</Button> : null
+          }
+
+          {
+            state === 2 ? <Button variant="outlined" onClick={handleStart} style={{ marginRight: 10 }}>Continue</Button> : null
+          }
+          {
+            state === 1 ?
+              <Button variant="outlined" onClick={handleReset}>
+                Pause
+              </Button> : null
+          }
+
+          {
+            state === 2 || state === 1 ?
+              <Button variant="outlined" onClick={handleRestart} style={{ marginRight: 10 }}>
+                Restart
+              </Button> :
+              null
           }
         </div>
 

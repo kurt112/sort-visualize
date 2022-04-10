@@ -4,12 +4,13 @@ const QuickSort = (data,temp) => {
     const tempData = [...data]
     let n = temp.length;
 
-    console.log('before temp');
-    console.log(temp);
-    quickSort(temp, 0, n - 1,  tempData);
+    const newArray = temp.map(data => ({ ...data }))
+    tempData.push(newArray);
 
-    console.log('after temp');
-    console.log(temp);
+    newArray[0].current = true;
+    newArray[n-1].target = true;
+    quickSort(temp, 0, n - 1,  tempData);
+  
     return tempData;
 }
 
@@ -34,11 +35,14 @@ const partition = (arr,low,high,tempData) => {
          }
      }
      swap(arr[ i + 1], arr[high]);
+     const newArray = arr.map(data => ({ ...data }))
+     tempData.push(newArray);
+     newArray[i+1].current = true;
+     newArray[high].target = true;
      return (i + 1);
 }
 
 const quickSort = (arr,low,high,tempData) => {
-    // console.log("im runiong");
     if (low < high)
     {
         let pi = partition(arr, low, high,tempData);
