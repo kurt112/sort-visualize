@@ -6,15 +6,16 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import BubbleSort from './alghorithms/BubbleSort';
+
+import { initData,getSort} from './alghorithms/helpers';
 const App = () => {
 
   const [data, setData] = useState([]);
   const increment = useRef(null);
   const [time, setTime] = useState(0);
   const [current, setCurrent] = useState(0)
-  const [size, setSize] = useState(10);
-  const [sortOptions] = useState(['Bubble Sort', 'Shell Sort'])
+  const [size, setSize] = useState(9);
+  const [sortOptions] = useState(['Bubble Sort', 'Selection Sort', 'Shell Sort', 'Insertion Sort', 'Quick Sort'])
   const [sort, setSort] = useState('');
   const [speed, setSpeed] = useState(1000);
   const [isPause, setIsPause] = useState(false);
@@ -23,7 +24,7 @@ const App = () => {
 
   const handleStart = () => {
 
-    if(isPause) return;
+    if (isPause) return;
 
     if (sort === '') {
       alert("Please Select Sort");
@@ -87,12 +88,16 @@ const App = () => {
   }
 
   useEffect(() => {
+    if(sort === '') return;
 
-    const newData = BubbleSort(size,data);
+    const newData = getSort(sort,size,data);
 
-    
+    console.log(newData);
+
+
     setData(newData);
-  }, [size])
+  }, [size,sort])
+
 
 
   return (

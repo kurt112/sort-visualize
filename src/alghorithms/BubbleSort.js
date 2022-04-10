@@ -1,15 +1,6 @@
-import {swap, newTrace, addToTrace, lastSorted, createKey} from './helpers'
-
-const BubbleSort = (size,data) => {
-    const temp = [];
-
-    for (let i = 0; i < size; i++) {
-      const number = Math.floor((Math.random() * 1000) + 1);
-      const data = { number, current: false, target: false, ordinary: true };
-
-      temp.push(data);
-    }
-
+import {swap} from './helpers'
+const BubbleSort = (data,temp) => {
+  
     const tempData = [...data]
     let flag = true;
 
@@ -19,13 +10,13 @@ const BubbleSort = (size,data) => {
         const newArray = temp.map(data => ({ ...data }))
         tempData.push(newArray);
         if (temp[i].number > temp[i + 1].number) {
-          const n = temp[i].number;
-          temp[i].number = temp[i + 1].number;
-          temp[i + 1].number = n;
+          swap(temp[i], temp[i+1])  
           flag = true;
-          newArray[i].current = true;
-          newArray[i + 1].target = true;
         }
+
+
+        newArray[i].current = true;
+        newArray[i + 1].target = true;
       }
     }
 

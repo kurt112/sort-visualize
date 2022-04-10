@@ -6,8 +6,7 @@ const Output = ({data,current}) => {
             data[current].map((data,i) => {
                 return <div key={i} style={
                     {
-                    marginLeft: '10px',
-                    width: '10px',
+                    width: '5px',
                     backgroundColor: data.current ? 'yellow': data.target? 'orange':'black',
                     height: data.number
                 }
