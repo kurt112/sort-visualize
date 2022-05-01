@@ -12,6 +12,8 @@ const BubbleSort = (data,temp) => {
         if (temp[i].number > temp[i + 1].number) {
           swap(temp[i], temp[i+1])  
           flag = true;
+        }else{
+          continue
         }
 
 

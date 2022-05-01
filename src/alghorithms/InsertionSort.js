@@ -12,7 +12,6 @@ const InsertionSort = (data,temp) => {
             newArray[j].current = true;
             newArray[j-1].target = true;
 
-
             if(temp[j].number < temp[j-1].number){
                 swap(temp[j], temp[j-1])
                 continue;

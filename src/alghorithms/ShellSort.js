@@ -1,28 +1,27 @@
-import {swap} from './helpers'
-const ShellSort = (data,temp) => {
+import { swap } from './helpers'
+const ShellSort = (data, temps) => {
+
+
   
     const tempData = [...data]
-    let n = Math.round((temp.length / 2));
-    alert(n)
-    while(n >=1){
-        console.log('the n ' + n);
-        for(let i=0; i<n; i++){
-            console.log('i = ' + i + ', n = ' + (i+n));
-            const newArray = temp.map(data => ({ ...data }))
-            tempData.push(newArray);
+    let arr_len = parseInt(temps.length);
 
-            if(temp[i].number > temp[i+n].number){
-                swap(temp[i], temp[i+n]);
-            }
+    for (let gap = arr_len / 2; gap > 0; gap /= 2) {
+       for (let i = parseInt(gap); i < arr_len; i += 1) {
+        const newArray = temps.map(data => ({ ...data }))
+        tempData.push(newArray);
+        let temp = newArray[i].number;
+        let j;
+        for (j = i; j >= gap && newArray[j - gap].number > temp; j -= gap)
 
-            temp[i].current = true;
-            temp[i+n].target = true;
+        console.log(newArray[j - gap]);
+        newArray[j].number = newArray[j - gap].number;
+        newArray[j].number = temp;
+
+      
         }
-        
-        n--;
     }
 
-   
     return tempData;
 }
 

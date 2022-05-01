@@ -19,7 +19,9 @@ const App = () => {
   const increment = useRef(null);
   const [current, setCurrent] = useState(0)
   const [size, setSize] = useState(9);
-  const [sortOptions] = useState(['Bubble Sort', 'Selection Sort', 'Shell Sort', 'Insertion Sort', 'Quick Sort'])
+  // to be add 
+  // 1.  'Shell Sort',  radix sort, merge sort
+  const [sortOptions] = useState(['Bubble Sort', 'Selection Sort','Insertion Sort', 'Quick Sort'])
   const [sort, setSort] = useState('Bubble Sort');
   const [speed, setSpeed] = useState(1000);
   const [state, setState] = useState(0);
